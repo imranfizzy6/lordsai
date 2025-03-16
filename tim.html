@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Metadata -->
+    <title>LordsAI - Advanced AI Chatbot by Imran Ansari</title>
+    <meta name="description" content="LordsAI is an advanced AI chatbot created by Imran Ansari. Chat with cutting-edge models like Grok 2, DeepSeek, and more. Try it now!">
+    <meta name="keywords" content="LordsAI, AI chatbot, Imran Ansari, Grok 2, DeepSeek, Gemini, artificial intelligence, chat interface">
+    <meta name="author" content="Imran Ansari">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags for Social Media -->
+    <meta property="og:title" content="LordsAI - Advanced AI Chatbot">
+    <meta property="og:description" content="Experience LordsAI, an AI chatbot powered by top models like Grok 2 and DeepSeek. Created by Imran Ansari.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lordsai.tiiny.site">
+    <meta property="og:image" content="https://lordsai.tiiny.site/og-image.jpg"> <!-- Replace with actual image URL -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"> <!-- Replace with your favicon file -->
+
+    <!-- Styles -->
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #50E3C2;
+            --chat-bg: #F7F9FB;
+            --header-bg: #34495E;
+            --user-msg-bg: #E1F5FE;
+            --bot-msg-bg: #FFFFFF;
+            --text-color: #2C3E50;
+            --input-bg: #ECF0F1;
+            --button-bg: #E74C3C;
+            --button-hover: #C0392B;
+            --landing-bg: #FDF2E9;
+            --select-bg: #BDC3C7;
+            --select-hover: #A1A6AA;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --highlight: #F1C40F;
+            --web-search-active: #27AE60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-color);
+            background: var(--chat-bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .landing-page {
+            height: 100vh;
+            background: var(--landing-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .try-button {
+            padding: 12px 30px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .try-button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .ad-banner {
+            width: 100%;
+            max-width: 350px;
+            height: 250px;
+            background: var(--highlight);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px var(--shadow-color);
+        }
+
+        .chat-interface {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 100%;
+            background: var(--header-bg);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .clear-btn, .web-search-btn {
+            background: var(--secondary);
+            border: none;
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 0.85em;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .clear-btn:hover, .web-search-btn:hover {
+            background: #45B7A0;
+            transform: scale(1.05);
+        }
+
+        .web-search-btn.active {
+            background: var(--web-search-active);
+        }
+
+        .chat-container {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--chat-bg);
+            overflow: hidden;
+        }
+
+        .messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 8px;
+            min-height: 0;
+        }
+
+        .message {
+            margin: 6px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 85%;
+            line-height: 1.3;
+            font-size: 0.9em;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: var(--user-msg-bg);
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background: var(--bot-msg-bg);
+            margin-right: auto;
+        }
+
+        .timestamp {
+            font-size: 0.65em;
+            color: #7F8C8D;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .typing {
+            color: var(--primary);
+            font-style: italic;
+            margin: 8px 0;
+            font-size: 0.85em;
+        }
+
+        .input-area {
+            padding: 8px;
+            background: var(--chat-bg);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            border-top: 1px solid var(--highlight);
+            box-shadow: 0 -2px 5px var(--shadow-color);
+            flex-shrink: 0;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9em;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            min-width: 0;
+        }
+
+        input:focus {
+            background: #FFFFFF;
+            box-shadow: 0 0 6px var(--primary);
+        }
+
+        select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background: var(--select-bg);
+            color: var(--text-color);
+            font-size: 0.9em;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%232C3E50" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            min-width: 100px;
+            max-width: 150px;
+            transition: background 0.3s;
+        }
+
+        select:hover {
+            background: var(--select-hover);
+        }
+
+        button {
+            padding: 8px 16px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        button:hover {
+            background: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        pre {
+            background: #2C3E50;
+            color: #ECF0F1;
+            padding: 8px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .chat-container {
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .sidebar {
+                padding: 8px 10px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .sidebar-header {
+                font-size: 1em;
+            }
+
+            .clear-btn, .web-search-btn {
+                padding: 5px 10px;
+                font-size: 0.8em;
+            }
+
+            .input-area {
+                padding: 6px;
+                gap: 4px;
+            }
+
+            input, select, button {
+                width: 100%;
+                margin-bottom: 6px;
+            }
+
+            select {
+                max-width: 100%;
+            }
+
+            .message {
+                max-width: 90%;
+                font-size: 0.85em;
+            }
+
+            .ad-banner {
+                max-width: 100%;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .try-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+
+            .message {
+                padding: 6px 10px;
+            }
+
+            .timestamp {
+                font-size: 0.6em;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .chat-container {
+                max-height: 80vh;
+                max-width: 800px;
+                margin: 0 auto;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px var(--shadow-color);
+            }
+
+            .messages {
+                padding: 15px;
+            }
+
+            .input-area {
+                padding: 15px;
+            }
+        }
+    </style>
+
+    <!-- Analytics and Ad Scripts -->
+    <script async defer data-domain="lordsai.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script>
+    <script async type="text/javascript" src="https://tiiny.host/ad-script.js"></script>
+</head>
+<body>
+    <!-- Landing Page -->
+    <main class="landing-page" id="landingPage">
+        <h1>LordsAI - Your AI Chat Companion</h1>
+        <p>Created by Imran Ansari, LordsAI offers a powerful chat experience with advanced AI models.</p>
+        <button class="try-button" onclick="showChat()">Try LordsAI Now</button>
+        <section class="ad-banner" aria-label="Advertisement">
+            <script type="text/javascript">
+                atOptions = {
+                    'key': 'def5507383ea01ec2fc33a0fd1f65f78',
+                    'format': 'iframe',
+                    'height': 50,
+                    'width': 320,
+                    'params': {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/def5507383ea01ec2fc33a0fd1f65f78/invoke.js" async></script>
+        </section>
+    </main>
+
+    <!-- Chat Interface -->
+    <section class="chat-interface hidden" id="chatInterface" aria-hidden="true">
+        <header class="sidebar">
+            <h2 class="sidebar-header">LordsAI Chat</h2>
+            <button class="web-search-btn" onclick="toggleWebSearch()">Web Search Off</button>
+            <button class="clear-btn" onclick="clearChat()">New Chat</button>
+        </header>
+        <div class="chat-container">
+            <div class="messages" id="messages" role="log" aria-live="polite"></div>
+            <form class="input-area" onsubmit="sendMessage(); return false;">
+                <input type="text" id="userInput" placeholder="Type a message..." aria-label="Message input">
+                <select id="modelSelect" aria-label="Select AI model">
+                    <option value="deepseek">DeepSeek v3</option>
+                    <option value="gemini2flash">Gemini 2.0 Flash</option>
+                    <option value="deepseekR1">DeepSeek R1</option>
+                    <option value="qwen-vl-plus">Qwen VL Plus</option>
+                    <option value="llama31">LLaMA 3.1 8B</option>
+                    <option value="chatgpt35turbo">ChatGPT 3.5 Turbo</option>
+                    <option value="gemini2flashExp">Gemini 2.0 Flash Exp</option>
+                    <option value="grok2">Grok 2 (xAI)</option>
+                </select>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        const landingPage = document.getElementById("landingPage");
+        const chatInterface = document.getElementById("chatInterface");
+        const messagesDiv = document.getElementById("messages");
+        const userInput = document.getElementById("userInput");
+        const modelSelect = document.getElementById("modelSelect");
+        const webSearchBtn = document.querySelector('.web-search-btn');
+
+        const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+        const CHATGPT_API_URL = "https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5IZkJDMlNyYUVUTjIyZVN3UWFNX3BFTU85SWpCM2NUMUk3T2dxejhLSzBhNWNMMXNzZlp3c09BSTR6YW1Sc1BmdGNTVk1GY0liT1RoWDZZX1lNZlZ0Z1dqd3c9PQ==";
+        const NORMAL_API_KEY = "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";
+        const GEMINI_API_KEY = "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";
+        const DEEP_API_KEY = "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";
+        const QWEN_API_KEY = "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";
+        const LLAMA_API_KEY = "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";
+        const GOOGLE_API_KEY = "AIzaSyDaTrt9jACT3_6cXsT9Tsz5pp0pjVxfk-I";
+        const GOOGLE_CSE_ID = "e31082175f8a34b84";
+        const GEMINI_EXP_API_KEY = "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";
+        const GROK2_API_KEY = "YOUR_XAI_API_KEY_HERE"; // Replace with your valid xAI API key
+
+        let isWebSearchEnabled = false;
+
+        const MODEL_CONFIG = {
+            deepseek: { url: API_URL, key: NORMAL_API_KEY, modelName: "deepseek/deepseek-chat:free", parse: data => data.choices[0].message.content },
+            gemini2flash: { url: API_URL, key: GEMINI_API_KEY, modelName: "google/gemini-2.0-flash-thinking-exp-1219:free", parse: data => data.choices[0].message.content },
+            deepseekR1: { url: API_URL, key: DEEP_API_KEY, modelName: "deepseek/deepseek-r1-distill-llama-70b:free", parse: data => data.choices[0].message.content },
+            "qwen-vl-plus": { url: API_URL, key: QWEN_API_KEY, modelName: "qwen/qwen-vl-plus:free", parse: data => data.choices[0].message.content },
+            llama31: { url: API_URL, key: LLAMA_API_KEY, modelName: "meta-llama/llama-3.1-8b-instruct:free", parse: data => data.choices[0].message.content },
+            chatgpt35turbo: { url: CHATGPT_API_URL, key: null, modelName: null, parse: data => data.status === "success" ? data.text : "Error from API" },
+            gemini2flashExp: { url: API_URL, key: GEMINI_EXP_API_KEY, modelName: "google/gemini-2.0-flash-thinking-exp:free", parse: data => data.choices[0].message.content },
+            grok2: { 
+                url: "https://api.x.ai/v1/chat/completions", 
+                key: GROK2_API_KEY, 
+                modelName: "grok-2-latest", 
+                parse: data => data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content ? data.choices[0].message.content : "Error: Invalid response from Grok 2"
+            }
+        };
+
+        function showChat() {
+            landingPage.classList.add("hidden");
+            chatInterface.classList.remove("hidden");
+        }
+
+        function toggleWebSearch() {
+            isWebSearchEnabled = !isWebSearchEnabled;
+            webSearchBtn.classList.toggle('active');
+            webSearchBtn.textContent = isWebSearchEnabled ? "Web Search On" : "Web Search Off";
+        }
+
+        function getTimestamp() {
+            return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function saveChatHistory() {
+            const messages = Array.from(messagesDiv.children)
+                .filter(div => !div.classList.contains('typing'))
+                .map(div => ({
+                    content: div.querySelector('.content')?.innerHTML || div.innerHTML.split('<div class="timestamp">')[0],
+                    isUser: div.classList.contains('user'),
+                    isCode: div.querySelector('pre') !== null,
+                    timestamp: div.querySelector('.timestamp')?.innerText || getTimestamp()
+                }));
+            localStorage.setItem('chatHistory', JSON.stringify(messages));
+        }
+
+        function loadChatHistory() {
+            const history = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            if (history.length === 0) {
+                addMessage('Welcome! Hello! I am LordsAI created by Imran Ansari. Select a model and type your message.', false);
+            } else {
+                history.forEach(({ content, isUser, isCode, timestamp }) => {
+                    addMessage(content, isUser, isCode, timestamp);
+                });
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addMessage(content, isUser = false, isCode = false, timestamp = getTimestamp()) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            const contentSpan = document.createElement('span');
+            contentSpan.className = 'content';
+            contentSpan.innerHTML = isCode ? `<pre><code>${content}</code></pre>` : content.replace(/\n/g, '<br>');
+            messageDiv.appendChild(contentSpan);
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'timestamp';
+            timeDiv.textContent = timestamp;
+            messageDiv.appendChild(timeDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            saveChatHistory();
+        }
+
+        async function displayWordByWord(content, isCode = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            const contentSpan = document.createElement('span');
+            contentSpan.className = 'content';
+            messageDiv.appendChild(contentSpan);
+            messagesDiv.appendChild(messageDiv);
+
+            if (isCode) {
+                contentSpan.innerHTML = `<pre><code>${content}</code></pre>`;
+            } else {
+                const words = content.split(' ');
+                for (let i = 0; i < words.length; i++) {
+                    contentSpan.innerHTML += (i > 0 ? ' ' : '') + words[i];
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+            }
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'timestamp';
+            timeDiv.textContent = getTimestamp();
+            messageDiv.appendChild(timeDiv);
+            saveChatHistory();
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.textContent = 'Processing...';
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return typingDiv;
+        }
+
+        function removeTyping() {
+            const typingDiv = document.getElementById("typingIndicator");
+            if (typingDiv) typingDiv.remove();
+        }
+
+        async function searchWeb(query) {
+            const searchUrl = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CSE_ID}&q=${encodeURIComponent(query)}&num=3`;
+            try {
+                const searchResponse = await fetch(searchUrl);
+                if (!searchResponse.ok) throw new Error(`Google Search API failed: ${searchResponse.status}`);
+                const searchData = await searchResponse.json();
+                if (!searchData.items || searchData.items.length === 0) return "No relevant results found.";
+
+                const topResult = searchData.items[0];
+                const snippet = topResult.snippet || "No snippet available.";
+                return `**Web Result:**\n${snippet}\n\n**Source:** <a href="${topResult.link}" target="_blank">${topResult.link}</a>`;
+            } catch (error) {
+                console.error("Web Search Error:", error);
+                return `Error performing web search: ${error.message}`;
+            }
+        }
+
+        function isCodeRequest(message) {
+            const lowerMessage = message.toLowerCase();
+            return lowerMessage.includes('code') && (
+                lowerMessage.includes('provide') ||
+                lowerMessage.includes('write') ||
+                lowerMessage.includes('give') ||
+                lowerMessage.includes('show') ||
+                lowerMessage.includes('generate')
+            );
+        }
+
+        async function fetchResponse(prompt, model) {
+            console.log(`Fetching response for model: ${model}, prompt: ${prompt}`);
+            const config = MODEL_CONFIG[model];
+            const isCodeReq = isCodeRequest(prompt);
+            const enhancedPrompt = isCodeReq ? `Please provide the response as properly formatted code (e.g., HTML, CSS, JavaScript, Python, etc.) with clear syntax:\n${prompt}` : prompt;
+
+            const body = model === "chatgpt35turbo" ? { prompt: enhancedPrompt } : {
+                model: config.modelName,
+                messages: [{ role: "system", content: "You are a helpful assistant." }, { role: "user", content: enhancedPrompt }],
+                stream: false,
+                temperature: 0
+            };
+
+            try {
+                const response = await fetch(config.url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(config.key ? { "Authorization": `Bearer ${config.key}` } : {})
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error: ${response.status} - ${errorText}`);
+                }
+                const data = await response.json();
+                if (!data.choices && config.modelName !== "chatgpt35turbo") {
+                    throw new Error("No valid response from API");
+                }
+                let result = config.parse(data);
+
+                if (isWebSearchEnabled) {
+                    const webResult = await searchWeb(prompt);
+                    result += `\n\n${webResult}`;
+                }
+
+                return { content: result, isCode: isCodeReq };
+            } catch (error) {
+                console.error(`API Error for ${model}:`, error);
+                return { content: `Error: ${error.message}`, isCode: false };
+            }
+        }
+
+        async function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            addMessage(userMessage, true);
+            userInput.value = "";
+
+            const lowerMessage = userMessage.toLowerCase();
+
+            if (lowerMessage.includes('who is narendra modi')) {
+                await displayWordByWord('Sorry, but I can’t talk about politics.');
+                return;
+            } 
+            else if (lowerMessage.includes('who is rahul gandhi')) {
+                await displayWordByWord('Rahul Gandhi is a legendary politician.');
+                return;
+            } 
+            else if (lowerMessage.includes('name all eastern state of india') || lowerMessage.includes('name all eastern states of india')) {
+                await displayWordByWord('This is beyond my abilities. Let’s talk about coding!');
+                return;
+            } 
+            else if (lowerMessage.includes('is arunachal pradesh part of india')) {
+                await displayWordByWord('Sorry, I can’t answer that.');
+                return;
+            } 
+            else if (lowerMessage.includes('who created') || lowerMessage.includes('who made') || 
+                     lowerMessage.includes('who built') || lowerMessage.includes('your maker')) {
+                await displayWordByWord('I was created by Imran Ansari.');
+                return;
+            }
+
+            const selectedModel = modelSelect.value;
+            console.log(`Selected model: ${selectedModel}`);
+            showTyping();
+            const { content, isCode } = await fetchResponse(userMessage, selectedModel);
+            removeTyping();
+            await displayWordByWord(content, isCode);
+        }
+
+        function clearChat() {
+            messagesDiv.innerHTML = '';
+            localStorage.removeItem('chatHistory');
+            addMessage('Welcome! Hello! I am LordsAI created by Imran Ansari. Select a model and type your message.', false);
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        window.addEventListener('load', loadChatHistory);
+    </script>
+</body>
+</html>
